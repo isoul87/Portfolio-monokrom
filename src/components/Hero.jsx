@@ -1,162 +1,132 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { ArrowDown } from 'lucide-react'
+import { profile } from '../content'
+
+// Kedalaman parallax per layer (px). Nilai negatif = bergerak berlawanan arah mouse.
+const DEPTH = { text: [-16, -8], logo: [-26, -14], photo: [10, 5], label: [6, 4] }
 
 export default function Hero() {
-  const [offset, setOffset] = useState({ x: 0, y: 0 })
-  const targetRef = useRef({ x: 0, y: 0 })
-  const currentRef = useRef({ x: 0, y: 0 })
-  const animFrameId = useRef(null)
+  const rootRef = useRef(null)
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      // Normalisasi -1 sampai +1
-      targetRef.current.x = (e.clientX / window.innerWidth) * 2 - 1
-      targetRef.current.y = (e.clientY / window.innerHeight) * 2 - 1
-    }
+    const root = rootRef.current
+    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (!root || !canHover || reduced) return
 
-    const handleTouchMove = (e) => {
-      if (e.touches.length > 0) {
-        targetRef.current.x = (e.touches[0].clientX / window.innerWidth) * 2 - 1
-        targetRef.current.y = (e.touches[0].clientY / window.innerHeight) * 2 - 1
+    const layers = [...root.querySelectorAll('[data-depth]')].map((el) => ({
+      el,
+      d: DEPTH[el.dataset.depth],
+    }))
+    const target = { x: 0, y: 0 }
+    const current = { x: 0, y: 0 }
+    let frame = 0
+
+    const apply = () => {
+      current.x += (target.x - current.x) * 0.08
+      current.y += (target.y - current.y) * 0.08
+      for (const { el, d } of layers) {
+        el.style.transform = `translate3d(${current.x * d[0]}px, ${current.y * d[1]}px, 0)`
+      }
+      // Berhenti menjadwalkan frame begitu posisi sudah mapan.
+      if (Math.abs(target.x - current.x) > 0.001 || Math.abs(target.y - current.y) > 0.001) {
+        frame = requestAnimationFrame(apply)
+      } else {
+        frame = 0
       }
     }
 
-    window.addEventListener('mousemove', handleMouseMove, { passive: true })
-    window.addEventListener('touchmove', handleTouchMove, { passive: true })
-
-    // Smooth Lerping Physics (0.07 damping factor)
-    const updatePhysics = () => {
-      currentRef.current.x += (targetRef.current.x - currentRef.current.x) * 0.07
-      currentRef.current.y += (targetRef.current.y - currentRef.current.y) * 0.07
-
-      setOffset({
-        x: currentRef.current.x,
-        y: currentRef.current.y
-      })
-
-      animFrameId.current = requestAnimationFrame(updatePhysics)
+    const onMove = (e) => {
+      target.x = (e.clientX / window.innerWidth) * 2 - 1
+      target.y = (e.clientY / window.innerHeight) * 2 - 1
+      if (!frame) frame = requestAnimationFrame(apply)
     }
 
-    animFrameId.current = requestAnimationFrame(updatePhysics)
-
+    window.addEventListener('mousemove', onMove, { passive: true })
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('touchmove', handleTouchMove)
-      if (animFrameId.current) cancelAnimationFrame(animFrameId.current)
+      window.removeEventListener('mousemove', onMove)
+      cancelAnimationFrame(frame)
     }
   }, [])
 
   return (
     <section
+      ref={rootRef}
       id="hero"
-      className="relative w-full h-screen overflow-hidden bg-white select-none flex items-center justify-center"
-      style={{
-        backgroundImage: `
-          linear-gradient(to right, rgba(0, 0, 0, 0.055) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(0, 0, 0, 0.055) 1px, transparent 1px)
-        `,
-        backgroundSize: '100px 100px'
-      }}
+      aria-label="Perkenalan"
+      className="grid-paper relative flex h-svh min-h-[560px] w-full items-center justify-center overflow-hidden bg-white"
     >
-      {/* LAYER 1: Giant Background Text - Clash Display Bold */}
+      {/* Teks latar raksasa (dekoratif, nama jabatan sebenarnya ada di h1 dan paragraf) */}
       <div
-        className="absolute inset-x-0 top-[35%] -translate-y-1/2 flex items-center justify-center pointer-events-none z-10 will-change-transform px-2 text-center"
-        style={{
-          transform: `translate3d(${offset.x * -16}px, ${offset.y * -8}px, 0)`
-        }}
+        data-depth="text"
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-[34%] z-10 -translate-y-1/2 px-2 text-center will-change-transform"
       >
-        <h2 className="font-clash font-bold text-stone-300 text-[11.5vw] md:text-9xl leading-none tracking-tight uppercase whitespace-nowrap drop-shadow-sm">
-          CREATIVE DEVELOPER
-        </h2>
-      </div>
-
-      {/* LAYER 1.5: Floating Tech Logos in Background (Exact Outline style) */}
-      {/* Floating React Outline Logo (Left) */}
-      <div
-        className="absolute top-[20%] sm:top-[22%] md:top-[13%] left-[5%] sm:left-[7%] md:left-[9%] pointer-events-none z-[15] will-change-transform"
-        style={{
-          transform: `translate3d(${offset.x * -16}px, ${offset.y * -10}px, 0)`
-        }}
-      >
-        <div className="animate-float-slow-1">
-          <img
-            src="/react-outline-hd.png"
-            alt="React Outline"
-            className="w-16 h-16 sm:w-20 sm:h-20 md:w-[92px] md:h-[92px] object-contain opacity-75 select-none"
-            loading="eager"
-          />
+        <div className="font-clash text-[19vw] font-bold uppercase leading-[0.86] tracking-tight text-stone-300 md:text-[10.5vw]">
+          Fullstack
+          <br />
+          Developer
         </div>
       </div>
 
-      {/* Floating Laravel Outline Logo (Right) */}
-      <div
-        className="absolute top-[19%] sm:top-[21%] md:top-[1  2%] right-[5%] sm:right-[7%] md:right-[9%] pointer-events-none z-[15] will-change-transform"
-        style={{
-          transform: `translate3d(${offset.x * -14}px, ${offset.y * -8}px, 0)`
-        }}
-      >
-        <div className="animate-float-slow-2">
-          <img
-            src="/laravel-outline-hd.png"
-            alt="Laravel Outline"
-            className="w-16 h-16 sm:w-20 sm:h-20 md:w-[92px] md:h-[92px] object-contain opacity-80 select-none"
-            loading="eager"
-          />
-        </div>
-      </div>
+      <img
+        data-depth="logo"
+        src="/react-outline.webp"
+        alt=""
+        width="166"
+        height="152"
+        className="pointer-events-none absolute left-[6%] top-[18%] z-[15] w-14 opacity-90 will-change-transform sm:w-20 md:left-[9%] md:w-28"
+      />
+      <img
+        data-depth="logo"
+        src="/laravel-outline.webp"
+        alt=""
+        width="164"
+        height="170"
+        className="pointer-events-none absolute right-[6%] top-[16%] z-[15] w-14 opacity-90 will-change-transform sm:w-20 md:right-[9%] md:w-28"
+      />
 
-      {/* LAYER 2: Cutout Subject (Firefly.png) */}
       <div
-        className="absolute bottom-0 inset-x-0 flex items-end justify-center pointer-events-none z-20 will-change-transform"
-        style={{
-          transform: `translate3d(${offset.x * 10}px, ${offset.y * 5}px, 0)`
-        }}
+        data-depth="photo"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex items-end justify-center will-change-transform"
       >
         <img
-          src="/Firefly.png"
-          alt="Muhamad Naufal Kuswandana"
-          className="h-[78vh] sm:h-[84vh] md:h-[88vh] max-h-[850px] object-contain object-bottom drop-shadow-[0_15px_30px_rgba(0,0,0,0.12)] filter grayscale contrast-[1.08]"
-          loading="eager"
+          src="/naufal.webp"
+          alt={`Foto ${profile.name}`}
+          width="1717"
+          height="1400"
+          fetchPriority="high"
+          className="h-[74vh] max-h-[850px] object-contain object-bottom grayscale contrast-[1.08] md:h-[86vh]"
         />
       </div>
 
-      {/* LAYER 3: Bottom Left - Name & View Archive (Syne ExtraBold & Inter) */}
-      <div
-        className="absolute bottom-8 sm:bottom-12 md:bottom-16 left-6 sm:left-12 md:left-20 z-30 will-change-transform max-w-[280px] sm:max-w-md"
-        style={{
-          transform: `translate3d(${offset.x * 6}px, ${offset.y * 4}px, 0)`
-        }}
-      >
-        <h1 className="font-syne font-extrabold text-2xl sm:text-3xl md:text-4xl lg:text-[44px] leading-[1.04] tracking-tight text-black uppercase">
-          MUHAMAD <br />
-          NAUFAL K.
+      <div data-depth="label" className="absolute bottom-8 left-6 z-30 max-w-[260px] will-change-transform sm:bottom-12 sm:left-12 md:bottom-16 md:left-20">
+        <h1 className="font-syne text-2xl font-extrabold uppercase leading-[1.04] tracking-tight text-black sm:text-3xl md:text-4xl lg:text-[44px]">
+          Muhamad
+          <br />
+          Naufal K.
         </h1>
-
+        <p className="mt-3 max-w-[22ch] font-inter text-xs leading-snug text-stone-700 sm:text-sm">
+          {profile.role}
+        </p>
         <a
           href="#works"
-          className="mt-5 sm:mt-7 inline-flex items-center gap-2.5 text-black hover:text-stone-700 transition-colors group cursor-pointer"
+          className="group mt-5 inline-flex items-center gap-2 font-inter text-sm font-semibold text-black underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black"
         >
-          <span className="font-inter font-semibold text-sm sm:text-base tracking-tight">
-            View Archive
-          </span>
-          <ArrowDown className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5] group-hover:translate-y-1 transition-transform" />
+          Lihat proyek
+          <ArrowDown className="h-4 w-4 transition-transform group-hover:translate-y-1" strokeWidth={2.5} />
         </a>
       </div>
 
-      {/* LAYER 4: Bottom Right - Available for Freelance (Syne ExtraBold) */}
-      <div
-        className="absolute bottom-10 sm:bottom-14 md:bottom-18 right-6 sm:right-12 md:right-20 z-30 will-change-transform text-right sm:text-left"
-        style={{
-          transform: `translate3d(${offset.x * 6}px, ${offset.y * 4}px, 0)`
-        }}
-      >
-        <div className="font-syne font-extrabold text-lg sm:text-2xl md:text-[28px] leading-[1.12] tracking-wider text-black uppercase">
-          AVAILABLE <br />
-          FOR <br />
-          FREELANCE
-        </div>
+      <div data-depth="label" className="absolute bottom-10 right-6 z-30 text-right will-change-transform sm:bottom-14 sm:right-12 md:right-20">
+        <p className="font-syne text-lg font-extrabold uppercase leading-[1.12] tracking-wider text-black sm:text-2xl md:text-[28px]">
+          Available
+          <br />
+          for
+          <br />
+          freelance
+        </p>
       </div>
     </section>
   )
 }
-
