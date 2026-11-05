@@ -57,8 +57,8 @@ npm -v
 1. **Clone repositori**
 
    ```bash
-   git clone <url-repositori>
-   cd coba
+   git clone https://github.com/isoul87/Portfolio-monokrom.git
+   cd Portfolio-monokrom
    ```
 
 2. **Pasang dependensi**

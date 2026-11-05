@@ -36,7 +36,7 @@ export const projects = [
       'Situs yang sedang kamu buka. Tata letak editorial monokrom dengan tipografi besar dan animasi yang secukupnya.',
     image: '/projects/portfolio.webp',
     url: '',
-    repo: '',
+    repo: 'https://github.com/isoul87/Portfolio-monokrom',
   },
   {
     index: '03',
