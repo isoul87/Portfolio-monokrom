@@ -60,9 +60,9 @@ export default function Hero() {
       <div
         data-depth="text"
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-[34%] z-10 -translate-y-1/2 px-2 text-center will-change-transform"
+        className="pointer-events-none absolute inset-x-0 top-[36%] z-10 -translate-y-1/2 px-2 text-center will-change-transform"
       >
-        <div className="font-clash text-[19vw] font-bold uppercase leading-[0.86] tracking-tight text-stone-300 md:text-[10.5vw]">
+        <div className="font-clash text-[14.5vw] font-bold uppercase leading-[0.88] tracking-tight text-stone-300 sm:text-[15vw] md:text-[10.5vw]">
           Fullstack
           <br />
           Developer
@@ -75,7 +75,7 @@ export default function Hero() {
         alt=""
         width="166"
         height="152"
-        className="pointer-events-none absolute left-[6%] top-[18%] z-[15] w-14 opacity-90 will-change-transform sm:w-20 md:left-[9%] md:w-28"
+        className="pointer-events-none absolute left-[5%] top-[19%] z-[15] w-9 opacity-90 will-change-transform sm:left-[7%] sm:top-[18%] sm:w-16 md:left-[9%] md:w-28"
       />
       <img
         data-depth="logo"
@@ -83,7 +83,7 @@ export default function Hero() {
         alt=""
         width="164"
         height="170"
-        className="pointer-events-none absolute right-[6%] top-[16%] z-[15] w-14 opacity-90 will-change-transform sm:w-20 md:right-[9%] md:w-28"
+        className="pointer-events-none absolute right-[5%] top-[18%] z-[15] w-9 opacity-90 will-change-transform sm:right-[7%] sm:top-[17%] sm:w-16 md:right-[9%] md:w-28"
       />
 
       <div
@@ -96,17 +96,17 @@ export default function Hero() {
           width="1717"
           height="1400"
           fetchPriority="high"
-          className="h-[74vh] max-h-[850px] object-contain object-bottom grayscale contrast-[1.08] md:h-[86vh]"
+          className="h-[58svh] max-h-[850px] max-w-[92vw] object-contain object-bottom grayscale contrast-[1.08] sm:h-[72svh] md:h-[86svh]"
         />
       </div>
 
-      <div data-depth="label" className="absolute bottom-8 left-6 z-30 max-w-[260px] will-change-transform sm:bottom-12 sm:left-12 md:bottom-16 md:left-20">
-        <h1 className="font-syne text-2xl font-extrabold uppercase leading-[1.04] tracking-tight text-black sm:text-3xl md:text-4xl lg:text-[44px]">
+      <div data-depth="label" className="absolute bottom-6 left-5 z-30 max-w-[240px] will-change-transform sm:bottom-12 sm:left-12 md:bottom-16 md:left-20">
+        <h1 className="font-syne text-xl font-extrabold uppercase leading-[1.04] tracking-tight text-black sm:text-3xl md:text-4xl lg:text-[44px]">
           Muhamad
           <br />
           Naufal K.
         </h1>
-        <p className="mt-3 max-w-[22ch] font-inter text-xs leading-snug text-stone-700 sm:text-sm">
+        <p className="mt-3 hidden max-w-[22ch] font-inter text-xs leading-snug text-stone-700 sm:block sm:text-sm">
           {profile.role}
         </p>
         <a
@@ -118,8 +118,8 @@ export default function Hero() {
         </a>
       </div>
 
-      <div data-depth="label" className="absolute bottom-10 right-6 z-30 text-right will-change-transform sm:bottom-14 sm:right-12 md:right-20">
-        <p className="font-syne text-lg font-extrabold uppercase leading-[1.12] tracking-wider text-black sm:text-2xl md:text-[28px]">
+      <div data-depth="label" className="absolute bottom-6 right-5 z-30 text-right will-change-transform sm:bottom-14 sm:right-12 md:right-20">
+        <p className="font-syne text-sm font-extrabold uppercase leading-[1.12] tracking-wider text-black sm:text-2xl md:text-[28px]">
           Available
           <br />
           for

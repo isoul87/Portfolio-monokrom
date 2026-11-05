@@ -23,7 +23,7 @@ export const projects = [
     stack: ['Laravel 13', 'Livewire', 'MySQL'],
     description:
       'Aplikasi point of sale berbasis web yang dibangun dengan Laravel 13 dan Livewire, dengan data tersimpan di MySQL.',
-    image: '',
+    image: '/projects/digital-pos.webp',
     url: '',
     repo: '',
   },
@@ -34,7 +34,7 @@ export const projects = [
     stack: ['React', 'Vite', 'Tailwind CSS'],
     description:
       'Situs yang sedang kamu buka. Tata letak editorial monokrom dengan tipografi besar dan animasi yang secukupnya.',
-    image: '',
+    image: '/projects/portfolio.webp',
     url: '',
     repo: '',
   },
@@ -44,7 +44,7 @@ export const projects = [
     kind: 'Undangan digital',
     stack: ['Next.js'],
     description: 'Situs undangan pernikahan digital yang dibangun dengan Next.js.',
-    image: '',
+    image: '/projects/undangan-nikah.webp',
     url: '',
     repo: '',
   },
